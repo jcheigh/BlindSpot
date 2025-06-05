@@ -2,8 +2,6 @@ from functools import lru_cache
 
 from pydantic import Field
 from pydantic_settings import BaseSettings
-
-print(Field(..., env="GOODFIRE_API_KEY"))
 class Settings(BaseSettings):
     goodfire_key: str = Field(..., env="GOODFIRE_API_KEY")
     openai_key: str = Field(..., env="OPENAI_API_KEY")

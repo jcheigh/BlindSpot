@@ -13,7 +13,7 @@ Behind the scenes, we intervene on the model via the [Goodfire SDK](https://docs
 ```bash
 corepack enable 
 pnpm --version 
-pnpm install    
+pnpm install
 ```
 3. Poetry Setup
 cURL poetry install then reload zsh config

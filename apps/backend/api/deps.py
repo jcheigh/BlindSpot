@@ -6,7 +6,7 @@ from fastapi import Header, HTTPException
 from core.goodfire_client import new_variant
 from core.config           import get_settings
 from core.goodfire_client  import client  # reuse global
-# Load bundle library
+
 _BUNDLE_PATH = pathlib.Path(__file__).resolve().parent.parent / "../../packages/shared/feature_bundles.json"
 BUNDLES = json.loads(_BUNDLE_PATH.read_text())
 
@@ -37,7 +37,7 @@ async def get_session(x_session: str | None = Header(None)) -> Session:
         return sess
 
     new_id = uuid.uuid4().hex
-    _SESSIONS[new_id] = Session()More actions
+    _SESSIONS[new_id] = Session()
     raise HTTPException(
         status_code=428,
         detail="Session created; resend with X-Session header.",
