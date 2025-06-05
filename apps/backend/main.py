@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.routes_chat import router as chat_router
 
-app = FastAPI(title="Ablation Blackout API", version="0.0.1")
+app = FastAPI(title="Blind Spot API", version="0.0.1")
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,6 +1,6 @@
-# 🎮 AblationBlackout 
+# 🎮 BlindSpot
 
-AblationBlackout is a Wordle x LLM x Mech Interp inspired game. Users are given a seemingly normal LLM, with a specific concept (color, birds, numbers etc.) ablated (forgotten). Players are given up to N model calls and up to 5 "Wordle" guesses to guess the concept. 
+BlindSpot is a Wordle x LLM x Mech Interp inspired game. Users are given a seemingly normal LLM, with a specific concept (color, birds, numbers etc.) ablated (forgotten). Players are given up to N model calls and up to 5 "Wordle" guesses to guess the concept. 
 
 Behind the scenes, we intervene on the model via the [Goodfire SDK](https://docs.goodfire.ai/quickstart#advanced-look-at-a-features-nearest-neighbors). This is a monorepo (Turborepo) that uses a next.js frontend (Typescript/Tailwind/React/Next) and a python backend (FastAPI).
 

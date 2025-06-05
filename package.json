@@ -1,5 +1,5 @@
 {
-  "name": "ablation-blackout",
+  "name": "blind-spot",
   "private": true,
   "workspaces": [
     "apps/*",
