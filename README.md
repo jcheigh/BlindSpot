@@ -58,3 +58,15 @@ and
 ```bash
 pnpm run dev:backend
 ```
+
+steps
+
+0- Set a pre-determined topic for users to try and guess
+1- User chats for 1 min / number of chats, set number of characters with a goodfire with abort_when
+2- At the end of the chat - user have 3 guess to try and guess the topic
+3- Each guess is compared to the original topic to get it's distance (may need to set threshold)
+4- They get to try another time for the same topic then they are announced losers
+
+Later:
+- replace convo with langchain-goodfire session history 
+- prune session history so dict doesnt get unnecessary big 
