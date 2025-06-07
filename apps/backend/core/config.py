@@ -1,18 +1,20 @@
 from functools import lru_cache
+from pathlib import Path
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from pydantic import Field
-from pydantic_settings import BaseSettings
+ENV_FILE = Path(__file__).resolve().parents[1] / ".env"  
 class Settings(BaseSettings):
-    goodfire_key: str = Field(..., env="GOODFIRE_API_KEY")
-    openai_key: str = Field(..., env="OPENAI_API_KEY")
-    call_budget: int = 20
-    
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    GOODFIRE_API_KEY: str 
+    CALL_BUDGET: int
+    GOODFIRE_MODEL: str 
 
+    model_config = SettingsConfigDict(
+        env_file=ENV_FILE,
+        env_file_encoding="utf-8",
+    )
 
 @lru_cache
-def get_settings() -> Settings:
-    """Singleton Settings object."""
-    return Settings()
+def _cached() -> Settings:
+    return Settings()       
+
+settings: Settings = _cached()
