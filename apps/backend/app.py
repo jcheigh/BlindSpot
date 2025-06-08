@@ -1,38 +1,74 @@
 from fastapi import FastAPI, HTTPException
-from session_manager import UserSession
 from pydantic import BaseModel
+
+from session_manager import UserSession
 from core.goodfire_client import GoodfireBot
-import goodfire 
+from core.utils import Logger
 
 app = FastAPI()
+### TODO: .pop(id) when expired
 sessions: dict[str, UserSession] = {}
 class ChatIn(BaseModel):
     prompt: str
-
+    
 @app.get("/")
 def hello_world():
+    Logger.success("Root endpoint hit")
     return {"msg": "Hello, World"}
-    
+
 @app.post("/start")
 async def start_game():
-    bot = GoodfireBot(concept="Sports")
+    """
+    Create a new *UserSession* and return its ID.
+    TODO: randomize concept, add difficulties
+    """
+    bot = GoodfireBot(concept="Sports")  
     session = UserSession(bot)
     sessions[session.session_id] = session
+
+    Logger.success(f"Game started – session_id={session.session_id}")
     return {"session_id": session.session_id}
 
 @app.post("/chat/{session_id}")
 async def chat(session_id: str, chat_in: ChatIn):
+    """Send a user message within the chat window."""
     session = sessions.get(session_id)
     if session is None:
+        Logger.error(f"Chat attempt on unknown session_id={session_id}")
         raise HTTPException(status_code=404, detail="session not found")
-
     try:
-        return await session.send_message(chat_in.prompt)
-    except goodfire.exceptions.GoodfireException as e:
+        payload = await session.send_message(chat_in.prompt)
+    except Exception as e:
+        Logger.error(f"Error in session {session_id}: {e}")
         raise HTTPException(status_code=502, detail=str(e))
+
+    if "error" in payload:
+        # session handles window‑closed logic internally
+        Logger.warning(f"[Session {session_id}] {payload['error']}")
+
+    return payload
 
 @app.post("/guess/{session_id}")
 def guess(session_id: str, guess: str):
-    session = sessions[session_id]
-    return session.make_guess(guess)
+    """Submit a guess for the hidden concept."""
+    session = sessions.get(session_id)
+    if session is None:
+        Logger.error(f"Guess attempt on unknown session_id={session_id}")
+        raise HTTPException(status_code=404, detail="session not found")
 
+    result = session.send_guess(guess)
+
+    # --- logging --------------------------------------------------------
+    if result.get("result") == "correct":
+        Logger.success(f"[Session {session_id}] Correct guess: '{guess}'")
+    elif result.get("game_over"):
+        Logger.warning(f"[Session {session_id}] Game over – last guess '{guess}'")
+    elif result.get("error"):
+        Logger.warning(f"[Session {session_id}] {result['error']}")
+    else:
+        Logger.info(
+            f"[Session {session_id}] Incorrect guess '{guess}'. "
+            f"Guesses left: {result.get('guesses_left')}"
+        )
+
+    return result

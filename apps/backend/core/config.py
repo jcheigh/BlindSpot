@@ -7,7 +7,16 @@ class Settings(BaseSettings):
     GOODFIRE_API_KEY: str 
     CALL_BUDGET: int
     GOODFIRE_MODEL: str 
-
+    DEFAULT_MSG: str 
+    TOP_K_FEATURES: int 
+    ABORT_WHEN_THRESH: int 
+    GOODFIRE_TEMP: int
+    GOODFIRE_TOP_P: int
+    MAX_TOKENS: int
+    CHAT_DURATION_SEC: int
+    MAX_MESSAGES: int       
+    MAX_GUESSES: int 
+    
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,
         env_file_encoding="utf-8",
