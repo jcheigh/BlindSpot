@@ -59,3 +59,13 @@ and
 pnpm run dev:backend
 ```
 
+## Testing Backend
+To test the API routes, 
+```bash
+pnpm run dev:backend
+```
+Then 
+```bash
+curl -X POST http://127.0.0.1:8000/start
+```
+and copy the session_id. Then open http://127.0.0.1:8000/docs in the browser and try out the relevant routes using your session id. 

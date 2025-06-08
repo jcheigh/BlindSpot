@@ -29,14 +29,14 @@ class UserSession:
     # -------------------------------------------------------------------------
     def __init__(
         self,
-        bot: "GoodfireBot",
+        bot: GoodfireBot,
         chat_duration_sec: int = CHAT_DURATION_SEC,
         max_messages: int      = MAX_MESSAGES,
         max_guesses: int       = MAX_GUESSES,
         allow_second_try: bool = ALLOW_SECOND_TRY,
     ):
         self.session_id: str           = str(uuid.uuid4())
-        self.bot: "GoodfireBot"        = bot
+        self.bot: GoodfireBot          = bot
 
         self.chat_duration = timedelta(seconds=chat_duration_sec)
         self.max_messages  = max_messages
@@ -81,17 +81,13 @@ class UserSession:
     # -------------------------------------------------------------------------
     # Public API – call these from your endpoints
     # -------------------------------------------------------------------------
-    def send_message(self, prompt: str) -> Dict[str, Any]:
-        """
-        Route a user prompt through GoodfireBot, but only if the chat
-        window is still open.
-        """
+    async def send_message(self, prompt: str):
         if not self._in_chat_window():
             self.chat_closed = True
             return {"error": "chat_window_closed"}
 
         self.messages_sent += 1
-        resp = self.bot.send_classified_chat(prompt)
+        resp = await self.bot.send_classified_chat(prompt)
         return {"assistant_response": resp}
 
     def make_guess(self, guess: str, threshold: int = 0) -> Dict[str, Any]:

@@ -5,11 +5,12 @@
 ## 🚀 Features
 
 ### Backend 
-- [ ] Setup simple working API
-  - [ ] Change Goodfire SDK to async
+- [x] Setup simple working API
+  - [x] Change Goodfire SDK to async (finished 6/8 10 AM)
 - [ ] Refactor backend to be not crap 
   - [ ] Prune session history dict
   - [ ] Add logging with colorama 
+  - [ ] Caching on feature search
 - [ ] Scale to list of 3 Easy/Medium/Hard concepts 
 - [ ] Figure out algorithmic to do 
   - [ ] Add session history in conversations (langchain or native in assistant-ui)
