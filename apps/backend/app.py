@@ -1,12 +1,13 @@
+import random
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from session_manager import UserSession
 from core.goodfire_client import GoodfireBot
 from core.utils import Logger
+from core.concepts import CONCEPTS, Difficulty
 
 app = FastAPI()
-### TODO: .pop(id) when expired
 sessions: dict[str, UserSession] = {}
 class ChatIn(BaseModel):
     prompt: str
@@ -17,17 +18,28 @@ def hello_world():
     return {"msg": "Hello, World"}
 
 @app.post("/start")
-async def start_game():
+async def start_game(difficulty: Difficulty = Difficulty.EASY):
     """
     Create a new *UserSession* and return its ID.
     TODO: randomize concept, add difficulties
     """
-    bot = GoodfireBot(concept="Sports")  
+    candidates = [c for c in CONCEPTS if c["difficulty"] == difficulty]
+    if not candidates:
+        raise HTTPException(status_code=500, detail="No concepts available for that difficulty.")
+
+    concept = random.choice(candidates)
+    Logger.step(f"Starting game with concept: {concept['name']} ({concept['difficulty']})")
+
+    bot = GoodfireBot(concept=concept["name"])
     session = UserSession(bot)
     sessions[session.session_id] = session
 
     Logger.success(f"Game started – session_id={session.session_id}")
-    return {"session_id": session.session_id}
+    return {
+        "session_id": session.session_id,
+        "difficulty": concept["difficulty"],
+        "concept": concept["name"],  
+    }
 
 @app.post("/chat/{session_id}")
 async def chat(session_id: str, chat_in: ChatIn):

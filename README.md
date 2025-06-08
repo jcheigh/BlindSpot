@@ -66,6 +66,9 @@ pnpm run dev:backend
 ```
 Then 
 ```bash
-curl -X POST http://127.0.0.1:8000/start
+curl -X POST "http://127.0.0.1:8000/start?difficulty=Easy"
 ```
 and copy the session_id. Then open http://127.0.0.1:8000/docs in the browser and try out the relevant routes using your session id. 
+
+## Random Notes
+- I turned up chat duration for testing. 
