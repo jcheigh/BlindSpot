@@ -55,7 +55,6 @@ export default function GamePage() {
         </div>
       </div>
       
-      {/* Mobile guess panel */}
       <div className="block md:hidden p-4">
         <GuessPanel 
           onGuess={makeGuess}

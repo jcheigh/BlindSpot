@@ -1,14 +1,14 @@
 import { Difficulty, GameSession, Message } from './types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function startGame(difficulty: Difficulty): Promise<GameSession> {
-  const response = await fetch(`${API_BASE_URL}/sessions`, {
+  console.log(`${API_BASE_URL}/start?difficulty=${difficulty}`)
+  const response = await fetch(`${API_BASE_URL}/start?difficulty=${difficulty}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ difficulty }),
   });
 
   if (!response.ok) {
@@ -18,13 +18,13 @@ export async function startGame(difficulty: Difficulty): Promise<GameSession> {
   return response.json();
 }
 
-export async function sendMessage(sessionId: string, content: string): Promise<Message> {
-  const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}/messages`, {
+export async function sendMessage(sessionId: string, prompt: string): Promise<Message> {
+  const response = await fetch(`${API_BASE_URL}/chat/${sessionId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ content }),
+    body: JSON.stringify({ prompt }), 
   });
 
   if (!response.ok) {
@@ -34,8 +34,9 @@ export async function sendMessage(sessionId: string, content: string): Promise<M
   return response.json();
 }
 
+
 export async function makeGuess(sessionId: string, guess: string): Promise<{ correct: boolean; targetConcept?: string }> {
-  const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}/guess`, {
+  const response = await fetch(`${API_BASE_URL}/guess/${sessionId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

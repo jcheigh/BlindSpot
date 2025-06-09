@@ -24,19 +24,19 @@ export function DifficultySelector({ onSelect, className }: DifficultySelectorPr
     description: string;
   }> = [
     {
-      value: 'easy',
+      value: 'Easy',
       label: 'Easy',
-      description: 'Common everyday concepts that are easy to guess',
+      description: 'Easy concepts',
     },
     {
-      value: 'medium',
+      value: 'Medium',
       label: 'Medium',
-      description: 'Moderately challenging concepts that require some thought',
+      description: 'Medium concepts',
     },
     {
-      value: 'hard',
+      value: 'Hard',
       label: 'Hard',
-      description: 'Difficult abstract concepts that will test your reasoning',
+      description: 'Hard concepts',
     },
   ];
 

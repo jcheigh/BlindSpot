@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     CHAT_DURATION_SEC: int
     MAX_MESSAGES: int       
     MAX_GUESSES: int 
+    FRONTEND_URL: str 
     
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,

@@ -23,9 +23,9 @@ This is just my thoughts at this point. Roughly, here are some things that are r
 3. Concepts: this is not a well defined term yet. 
 4. Session history in conversations (langchain or native in assistant-ui)
 ### Frontend 
-- [ ] Figure out basic design
-- Stack: next.js, react, typescript, tailwind, assistant-ui (for chat UI)
-
+- [x] Vibe code basic design (done 6/8 sometime)
+- [ ] Refactor so isn't crap
+  - [ ] Check API routes. api.ts & backend/app.py don't agree (for example messages). Dig in and see what is and isn't necessary from a frontend pov and resolve this.
 ### Other
 - [ ] Deployment 
 - [ ] Cleanup/refactoring/error handling

@@ -23,7 +23,7 @@ export default function Home() {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-4 text-primary">BlindSpot</h1>
           <p className="text-lg text-gray-600">
-            The concept guessing game that challenges your reasoning
+            Ask questions to find the AI's blind spot!
           </p>
         </div>
 
@@ -37,7 +37,7 @@ export default function Home() {
               size="lg"
               disabled={!selectedDifficulty || isLoading}
               onClick={handleStartGame}
-              className="px-8 py-2 text-lg"
+              className="bg-red-500 text-white px-8 py-2 text-lg"
             >
               {isLoading ? 'Starting Game...' : 'Start Game'}
             </Button>

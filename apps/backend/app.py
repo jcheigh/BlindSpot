@@ -1,13 +1,23 @@
 import random
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from session_manager import UserSession
 from core.goodfire_client import GoodfireBot
 from core.utils import Logger
 from core.concepts import CONCEPTS, Difficulty
+from core.config import settings
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[settings.FRONTEND_URL],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 sessions: dict[str, UserSession] = {}
 class ChatIn(BaseModel):
     prompt: str
@@ -36,9 +46,13 @@ async def start_game(difficulty: Difficulty = Difficulty.EASY):
 
     Logger.success(f"Game started – session_id={session.session_id}")
     return {
-        "session_id": session.session_id,
+        "id": session.session_id,
         "difficulty": concept["difficulty"],
-        "concept": concept["name"],  
+        "startTime": session.chat_start.isoformat(),
+        "messages": [],  
+        "targetConcept": concept,
+        "guessCount": 0,
+        "revealed": False,
     }
 
 @app.post("/chat/{session_id}")
