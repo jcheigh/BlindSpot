@@ -9,7 +9,7 @@ import { GuessPanel } from '@/components/game/guess-panel';
 import { useGame } from '@/lib/game-context';
 
 export default function GamePage() {
-  const { session, isLoading, sendMessage, makeGuess, revealAnswer } = useGame();
+  const { session, isLoading, sendChat, sendGuess, revealAnswer } = useGame();
   const router = useRouter();
 
   useEffect(() => {
@@ -18,6 +18,7 @@ export default function GamePage() {
     }
   }, [session, router]);
 
+  // will hit on initial render 
   if (!session) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -40,13 +41,13 @@ export default function GamePage() {
             <ChatWindow messages={session.messages} className="h-full" />
           </div>
           <div className="p-4 border-t border-gray-200">
-            <MessageInput onSend={sendMessage} isLoading={isLoading} />
+            <MessageInput onSend={sendChat} isLoading={isLoading} />
           </div>
         </div>
         
         <div className="w-96 hidden md:block">
           <GuessPanel 
-            onGuess={makeGuess}
+            onGuess={sendGuess}
             onReveal={revealAnswer}
             targetConcept={session.targetConcept}
             revealed={session.revealed}
@@ -57,7 +58,7 @@ export default function GamePage() {
       
       <div className="block md:hidden p-4">
         <GuessPanel 
-          onGuess={makeGuess}
+          onGuess={sendGuess}
           onReveal={revealAnswer}
           targetConcept={session.targetConcept}
           revealed={session.revealed}

@@ -33,7 +33,6 @@ class UserSession:
         self._reset_chat_window()
         self._reset_guess_window()
         self.won = False
-
         Logger.info(f"New session {self.session_id} started")
 
     def _reset_chat_window(self) -> None:
@@ -71,10 +70,15 @@ class UserSession:
             resp = await self.bot.send_classified_chat(prompt)
         except Exception as exc:
             Logger.error(f"Bot error in session {self.session_id}: {exc}")
-            raise
+            return {"error" : f'chatbot error {exc}'}
 
         Logger.info(f"[Session {self.session_id}] ASSISTANT: {resp}")
-        return {"assistant_response": resp}
+        return {
+            "id"       : self.session_id,
+            "content"  : resp,
+            "role"     : "assistant",
+            "timestamp": datetime.now().isoformat()
+        }
 
     def send_guess(self, guess: str, threshold: int = 0) -> Dict[str, Any]:
         Logger.info(f"[Session {self.session_id}] GUESS: '{guess}'")
@@ -94,7 +98,7 @@ class UserSession:
             self.won = True
             self.guess_closed = True
             Logger.success(f"Correct guess in session {self.session_id} – distance {distance}")
-            return {"result": "correct", "distance": distance}
+            return {"correct": True, "targetConcept" : self.bot.concept}
 
         self.guesses_left -= 1
         Logger.info(f"Incorrect guess (distance {distance}). Guesses left: {self.guesses_left}")
@@ -103,15 +107,13 @@ class UserSession:
             self.guess_closed = True
             Logger.warning(f"Game over for session {self.session_id}")
             return {
-                "result": "incorrect",
-                "distance": distance,
-                "game_over": True,
+                "correct"       : False,
+                "targetConcept" : self.bot.concept
             }
 
         return {
-            "result": "incorrect",
-            "distance": distance,
-            "guesses_left": self.guesses_left,
+            "correct"       : False,
+            "targetConcept" : self.bot.concept
         }
         
     @property
@@ -121,13 +123,3 @@ class UserSession:
             return 0.0
         remaining = self.chat_duration - (datetime.now() - self.chat_start)
         return max(0.0, remaining.total_seconds())
-
-    def summary(self) -> Dict[str, Any]:
-        """Serialize minimal public state (handy for front‑end polling)."""
-        return {
-            "session_id":    self.session_id,
-            "won":           self.won,
-            "messages_sent": self.messages_sent,
-            "time_left_sec": self.time_left,
-            "guesses_left":  self.guesses_left,
-        }

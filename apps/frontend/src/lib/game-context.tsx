@@ -27,14 +27,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const sendMessage = async (content: string) => {
+  const sendChat = async (content: string) => {
     if (!session) {
       throw new Error('No active game session');
     }
 
     try {
       setIsLoading(true);
-      const message = await api.sendMessage(session.id, content);
+      const message = await api.sendChat(session.id, content);
+
+      if ("error" in message) {
+        throw new Error(message.error);
+      }
+
       setSession((prev) => {
         if (!prev) return null;
         return {
@@ -49,15 +54,20 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const makeGuess = async (guess: string): Promise<boolean> => {
+  const sendGuess = async (guess: string): Promise<boolean> => {
     if (!session) {
       throw new Error('No active game session');
     }
 
     try {
       setIsLoading(true);
-      const result = await api.makeGuess(session.id, guess);
+      const result = await api.sendGuess(session.id, guess);
       
+
+      if ("error" in result) {
+        throw new Error(result.error);
+      }
+
       setSession((prev) => {
         if (!prev) return null;
         return {
@@ -106,8 +116,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     isLoading,
     error,
     startGame,
-    sendMessage,
-    makeGuess,
+    sendChat,
+    sendGuess,
     revealAnswer,
   };
 

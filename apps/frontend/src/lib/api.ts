@@ -1,9 +1,8 @@
-import { Difficulty, GameSession, Message } from './types';
+import { Difficulty, GameSession, Message, ErrorResponse } from './types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function startGame(difficulty: Difficulty): Promise<GameSession> {
-  console.log(`${API_BASE_URL}/start?difficulty=${difficulty}`)
   const response = await fetch(`${API_BASE_URL}/start?difficulty=${difficulty}`, {
     method: 'POST',
     headers: {
@@ -18,7 +17,7 @@ export async function startGame(difficulty: Difficulty): Promise<GameSession> {
   return response.json();
 }
 
-export async function sendMessage(sessionId: string, prompt: string): Promise<Message> {
+export async function sendChat(sessionId: string, prompt: string): Promise<Message | ErrorResponse> {
   const response = await fetch(`${API_BASE_URL}/chat/${sessionId}`, {
     method: 'POST',
     headers: {
@@ -35,7 +34,7 @@ export async function sendMessage(sessionId: string, prompt: string): Promise<Me
 }
 
 
-export async function makeGuess(sessionId: string, guess: string): Promise<{ correct: boolean; targetConcept?: string }> {
+export async function sendGuess(sessionId: string, guess: string): Promise<{ correct: boolean; targetConcept: string } | ErrorResponse> {
   const response = await fetch(`${API_BASE_URL}/guess/${sessionId}`, {
     method: 'POST',
     headers: {
@@ -52,22 +51,12 @@ export async function makeGuess(sessionId: string, guess: string): Promise<{ cor
 }
 
 export async function revealAnswer(sessionId: string): Promise<{ targetConcept: string }> {
-  const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}/reveal`, {
+  const response = await fetch(`${API_BASE_URL}/reveal/${sessionId}`, {
     method: 'POST',
   });
 
   if (!response.ok) {
     throw new Error('Failed to reveal answer');
-  }
-
-  return response.json();
-}
-
-export async function getSession(sessionId: string): Promise<GameSession> {
-  const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}`);
-
-  if (!response.ok) {
-    throw new Error('Failed to get session');
   }
 
   return response.json();

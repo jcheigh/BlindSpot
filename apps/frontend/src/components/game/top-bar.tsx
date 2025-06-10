@@ -5,7 +5,7 @@ import { cn, useTimer } from '@/lib/utils';
 import { Counter } from './counter';
 
 interface TopBarProps {
-  startTime?: string;
+  startTime: string;
   messageCount: number;
   guessCount: number;
   className?: string;
@@ -23,7 +23,7 @@ export function TopBar({ startTime, messageCount, guessCount, className }: TopBa
         
         <div className="flex items-center gap-6">
           <Counter label="Time" value={elapsed} variant="outline" />
-          <Counter label="Messages" value={messageCount} variant="secondary" />
+          <Counter label="Messages" value={messageCount} variant="default" />
           <Counter label="Guesses" value={guessCount} variant={guessCount > 0 ? 'warning' : 'outline'} />
         </div>
       </div>

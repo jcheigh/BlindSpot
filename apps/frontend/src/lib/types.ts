@@ -1,5 +1,8 @@
 export type Difficulty = 'Easy' | 'Medium' | 'Hard';
 
+export interface ErrorResponse {
+  error: string;
+}
 export interface Message {
   id: string;
   content: string;
@@ -12,7 +15,7 @@ export interface GameSession {
   difficulty: Difficulty;
   startTime: string;
   messages: Message[];
-  targetConcept?: string;
+  targetConcept: string;
   guessCount: number;
   revealed: boolean;
 }
@@ -22,7 +25,7 @@ export interface GameContextType {
   isLoading: boolean;
   error: Error | null;
   startGame: (difficulty: Difficulty) => Promise<void>;
-  sendMessage: (content: string) => Promise<void>;
-  makeGuess: (guess: string) => Promise<boolean>;
+  sendChat: (content: string) => Promise<void>;
+  sendGuess: (guess: string) => Promise<boolean>;
   revealAnswer: () => Promise<void>;
 }
