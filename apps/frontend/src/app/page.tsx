@@ -18,32 +18,40 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 md:p-8">
-      <div className="w-full max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4 text-primary">BlindSpot</h1>
-          <p className="text-lg text-gray-600">
-            Ask questions to find the AI's blind spot!
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="relative z-10 w-full max-w-4xl mx-auto">
+        <div className="text-center mb-12">
+          <div className="relative inline-block">
+            <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent tracking-wide">
+              BlindSpot
+            </h1>
+            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 rounded-lg blur opacity-10"></div>
+          </div>
+          <p className="text-xl text-slate-300 font-medium tracking-wide">
+            Uncover the Hidden. Challenge the Unknown.
           </p>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-10">
           <DifficultySelector onSelect={setSelectedDifficulty} />
           
-          <Instructions className="mt-8" />
+          <Instructions />
           
-          <div className="flex justify-center mt-8">
+          <div className="flex justify-center mt-12">
             <Button
               size="lg"
               disabled={!selectedDifficulty || isLoading}
               onClick={handleStartGame}
-              className="bg-red-500 text-white px-8 py-2 text-lg"
+              className="relative bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-12 py-4 text-xl font-bold rounded-xl shadow-2xl shadow-red-900/50 transform transition-all duration-200 hover:scale-105 hover:shadow-red-900/70 disabled:opacity-50 disabled:transform-none disabled:shadow-none"
             >
-              {isLoading ? 'Starting Game...' : 'Start Game'}
+              <span className="relative z-10">
+                {isLoading ? 'Initializing...' : 'Enter the Arena'}
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-red-600 opacity-0 hover:opacity-20 rounded-xl transition-opacity duration-200"></div>
             </Button>
           </div>
         </div>
-      </div>
+      </div> 
     </main>
   );
 }

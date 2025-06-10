@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Difficulty } from '@/lib/types';
-import { Card, CardContent } from '@/components/ui/card';
 
 interface DifficultySelectorProps {
   onSelect: (difficulty: Difficulty) => void;
@@ -21,61 +20,74 @@ export function DifficultySelector({ onSelect, className }: DifficultySelectorPr
   const difficulties: Array<{
     value: Difficulty;
     label: string;
-    description: string;
+    icon: string;
+    color: string;
   }> = [
     {
       value: 'Easy',
       label: 'Easy',
-      description: 'Easy concepts',
+      icon: '🟢',
+      color: 'from-green-500 to-emerald-600',
     },
     {
       value: 'Medium',
       label: 'Medium',
-      description: 'Medium concepts',
+      icon: '🟡',
+      color: 'from-yellow-500 to-orange-600',
     },
     {
       value: 'Hard',
       label: 'Hard',
-      description: 'Hard concepts',
+      icon: '🔴',
+      color: 'from-red-500 to-pink-600',
     },
   ];
 
   return (
-    <div className={cn('space-y-4', className)}>
-      <h2 className="text-lg font-semibold">Select Difficulty</h2>
-      <div className="grid gap-4 sm:grid-cols-3">
+    <div className={cn('space-y-6', className)}>
+      <h2 className="text-2xl font-bold text-center text-slate-200 tracking-wide">Choose Your Challenge</h2>
+      <div className="grid gap-6 sm:grid-cols-3">
         {difficulties.map((difficulty) => (
-          <Card
+          <div
             key={difficulty.value}
             className={cn(
-              'cursor-pointer transition-colors hover:border-primary',
-              selected === difficulty.value
-                ? 'border-2 border-primary bg-primary/5'
-                : 'border border-gray-200'
+              'relative group cursor-pointer transition-all duration-300 transform hover:scale-105',
+              selected === difficulty.value ? 'scale-105' : ''
             )}
             onClick={() => handleSelect(difficulty.value)}
           >
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  id={difficulty.value}
-                  name="difficulty"
-                  value={difficulty.value}
-                  checked={selected === difficulty.value}
-                  onChange={() => handleSelect(difficulty.value)}
-                  className="h-4 w-4 accent-primary"
-                />
-                <label
-                  htmlFor={difficulty.value}
-                  className="text-base font-medium cursor-pointer"
-                >
-                  {difficulty.label}
-                </label>
+            <div
+              className={cn(
+                'relative bg-slate-800/80 backdrop-blur-sm border-2 rounded-xl p-6 shadow-xl transition-all duration-300',
+                selected === difficulty.value
+                  ? 'border-cyan-400 shadow-cyan-400/50 shadow-2xl bg-slate-700/90'
+                  : 'border-slate-600 hover:border-slate-500 hover:shadow-slate-500/30'
+              )}
+            >
+              <div className="text-center space-y-3">
+                <div className="text-4xl">{difficulty.icon}</div>
+                <h3 className="text-xl font-bold text-white">{difficulty.label}</h3>
+                <div className={cn(
+                  'w-full h-1 rounded-full bg-gradient-to-r',
+                  difficulty.color
+                )}></div>
               </div>
-              <p className="mt-2 text-sm text-gray-500">{difficulty.description}</p>
-            </CardContent>
-          </Card>
+              
+              {selected === difficulty.value && (
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+              )}
+              
+              <input
+                type="radio"
+                id={difficulty.value}
+                name="difficulty"
+                value={difficulty.value}
+                checked={selected === difficulty.value}
+                onChange={() => handleSelect(difficulty.value)}
+                className="sr-only"
+              />
+            </div>
+          </div>
         ))}
       </div>
     </div>

@@ -1,15 +1,126 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { TopBar } from '@/components/game/top-bar';
-import { ChatWindow } from '@/components/game/chat-window';
-import { MessageInput } from '@/components/game/message-input';
-import { GuessPanel } from '@/components/game/guess-panel';
+import { AssistantRuntimeProvider } from '@assistant-ui/react';
+import { useChatRuntime } from '@assistant-ui/react-ai-sdk';
+import { Thread } from '@/components/assistant-ui/thread';
+import { Button } from '@/components/ui/button';
 import { useGame } from '@/lib/game-context';
+import { sendChat, sendGuess } from '@/lib/api';
+
+function GameContent() {
+  const { session } = useGame();
+  const [guessInput, setGuessInput] = useState('');
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [isGuessing, setIsGuessing] = useState(false);
+
+  const handleGuess = async () => {
+    if (!session || !guessInput.trim()) return;
+    
+    setIsGuessing(true);
+    try {
+      const result = await sendGuess(session.id, guessInput.trim());
+      if ('correct' in result && result.correct) {
+        setShowCelebration(true);
+      }
+    } catch (error) {
+      console.error('Failed to submit guess:', error);
+    } finally {
+      setIsGuessing(false);
+      setGuessInput('');
+    }
+  };
+
+  const runtime = useChatRuntime({
+    api: async ({ messages }) => {
+      if (!session) throw new Error('No active session');
+      
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage?.role === 'user') {
+        const response = await sendChat(session.id, lastMessage.content);
+        if ('content' in response) {
+          return new Response(response.content);
+        }
+      }
+      return new Response('Error processing message');
+    },
+  });
+
+  if (showCelebration) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="text-8xl mb-8">🎉</div>
+          <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+            Congratulations!
+          </h1>
+          <p className="text-2xl text-slate-300 mb-8">
+            You've successfully uncovered the hidden concept!
+          </p>
+          <Button
+            onClick={() => window.location.href = '/'}
+            className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-12 py-4 text-xl font-bold rounded-xl"
+          >
+            Play Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 p-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+            BlindSpot
+          </h1>
+          <p className="text-slate-300">Uncover the Hidden. Challenge the Unknown.</p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-200px)]">
+          <div className="lg:col-span-2 bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden">
+            <AssistantRuntimeProvider runtime={runtime}>
+              <Thread />
+            </AssistantRuntimeProvider>
+          </div>
+          
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+            <h3 className="text-xl font-semibold text-white mb-4">Make Your Guess</h3>
+            <div className="space-y-4">
+              <textarea
+                value={guessInput}
+                onChange={(e) => setGuessInput(e.target.value)}
+                placeholder="What do you think the hidden concept is?"
+                className="w-full h-32 p-4 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <Button
+                onClick={handleGuess}
+                disabled={!guessInput.trim() || isGuessing}
+                className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-3 font-semibold rounded-lg"
+              >
+                {isGuessing ? 'Submitting...' : 'Submit Guess'}
+              </Button>
+            </div>
+            
+            {session && (
+              <div className="mt-6 pt-6 border-t border-slate-600">
+                <div className="text-sm text-slate-400 space-y-2">
+                  <div>Messages: {session.messages.length}</div>
+                  <div>Guesses: {session.guessCount}</div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function GamePage() {
-  const { session, isLoading, sendChat, sendGuess, revealAnswer } = useGame();
+  const { session } = useGame();
   const router = useRouter();
 
   useEffect(() => {
@@ -21,50 +132,11 @@ export default function GamePage() {
   // will hit on initial render 
   if (!session) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>No active game session. Redirecting to home...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <p className="text-slate-300">No active game session. Redirecting to home...</p>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <TopBar 
-        startTime={session.startTime} 
-        messageCount={session.messages.length} 
-        guessCount={session.guessCount} 
-      />
-      
-      <div className="flex flex-1 p-4 gap-4 overflow-hidden">
-        <div className="flex-1 flex flex-col bg-white rounded-lg shadow-sm overflow-hidden">
-          <div className="flex-1 overflow-y-auto">
-            <ChatWindow messages={session.messages} className="h-full" />
-          </div>
-          <div className="p-4 border-t border-gray-200">
-            <MessageInput onSend={sendChat} isLoading={isLoading} />
-          </div>
-        </div>
-        
-        <div className="w-96 hidden md:block">
-          <GuessPanel 
-            onGuess={sendGuess}
-            onReveal={revealAnswer}
-            targetConcept={session.targetConcept}
-            revealed={session.revealed}
-            isLoading={isLoading}
-          />
-        </div>
-      </div>
-      
-      <div className="block md:hidden p-4">
-        <GuessPanel 
-          onGuess={sendGuess}
-          onReveal={revealAnswer}
-          targetConcept={session.targetConcept}
-          revealed={session.revealed}
-          isLoading={isLoading}
-        />
-      </div>
-    </div>
-  );
+  return <GameContent />;
 }

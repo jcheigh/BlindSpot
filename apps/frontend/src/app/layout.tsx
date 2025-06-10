@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "BlindSpot - Concept Guessing Game",
-  description: "A game that challenges your reasoning abilities by having you guess hidden concepts.",
+  description: "Guess the AI's Blind Spot!",
 };
 
 export default function RootLayout({

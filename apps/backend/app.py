@@ -47,7 +47,6 @@ async def start_game(difficulty: Difficulty = Difficulty.EASY):
     return {
         "id"           : session.session_id,
         "difficulty"   : concept["difficulty"],
-        "startTime"    : session.chat_start.isoformat(),
         "messages"     : [],  
         "targetConcept": concept,
         "guessCount"   : 0,

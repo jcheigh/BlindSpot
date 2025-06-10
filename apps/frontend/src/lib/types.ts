@@ -13,7 +13,6 @@ export interface Message {
 export interface GameSession {
   id: string;
   difficulty: Difficulty;
-  startTime: string;
   messages: Message[];
   targetConcept: string;
   guessCount: number;

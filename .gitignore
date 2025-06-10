@@ -42,4 +42,4 @@ poetry/
 dist/
 __pycache__
 CLAUDE.md
-decisions.md
+.claude
