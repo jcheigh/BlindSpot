@@ -32,3 +32,8 @@ This is just my thoughts at this point. Roughly, here are some things that are r
 - [ ] Update README.md
 
 ---
+
+- [ ] Integrate assistant-ui properly (useChatRuntime/sendChat), different styling 
+- [ ] Add functionality to lose game/start again
+- [ ] Algorithmic stuff 
+- [ ] Clean up frontend

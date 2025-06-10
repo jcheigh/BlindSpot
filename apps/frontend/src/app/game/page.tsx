@@ -32,6 +32,9 @@ function GameContent() {
     }
   };
 
+  const handleMsg = async () => {
+    if (!session || !)
+  }
   const runtime = useChatRuntime({
     api: async ({ messages }) => {
       if (!session) throw new Error('No active session');
@@ -76,7 +79,7 @@ function GameContent() {
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
             BlindSpot
           </h1>
-          <p className="text-slate-300">Uncover the Hidden. Challenge the Unknown.</p>
+          <p className="text-slate-300">Find the AI's Blind Spot! </p>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-200px)]">

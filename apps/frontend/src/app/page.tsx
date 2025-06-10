@@ -28,7 +28,7 @@ export default function Home() {
             <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 rounded-lg blur opacity-10"></div>
           </div>
           <p className="text-xl text-slate-300 font-medium tracking-wide">
-            Uncover the Hidden. Challenge the Unknown.
+            Find the AI's Blind Spot! 
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export default function Home() {
               className="relative bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-12 py-4 text-xl font-bold rounded-xl shadow-2xl shadow-red-900/50 transform transition-all duration-200 hover:scale-105 hover:shadow-red-900/70 disabled:opacity-50 disabled:transform-none disabled:shadow-none"
             >
               <span className="relative z-10">
-                {isLoading ? 'Initializing...' : 'Enter the Arena'}
+                {isLoading ? 'Initializing...' : 'Start Game'}
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-red-600 opacity-0 hover:opacity-20 rounded-xl transition-opacity duration-200"></div>
             </Button>
