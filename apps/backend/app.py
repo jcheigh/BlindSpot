@@ -1,5 +1,6 @@
 import random
 from pydantic import BaseModel
+from typing import List, Literal
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -19,11 +20,18 @@ app.add_middleware(
 )
 
 sessions: dict[str, UserSession] = {}
-class ChatIn(BaseModel):
-    prompt: str 
-
-class GuessIn(BaseModel):
+class GuessRequest(BaseModel):
     guess: str 
+
+class Message(BaseModel):
+    role: Literal["user", "assistant", "system", "tool"]
+    content: str
+
+class ChatRequest(BaseModel):
+    messages: List[Message]
+
+class ChatResponse(BaseModel):
+    message: str
 
 @app.get("/")
 def hello_world():
@@ -53,23 +61,19 @@ async def start_game(difficulty: Difficulty = Difficulty.EASY):
         "revealed"     : False
     }
 
-@app.post("/chat/{session_id}")
-async def chat(session_id: str, chat_in: ChatIn):
-    """ 
-    Returns either {
-            "id"       : self.session_id,
-            "content"  : resp,
-            "role"     : "assistant",
-            "timestamp": datetime.now().isoformat()
-            }
-    or {"error" : {error_msg}}
-    """
+@app.post("/chat/{session_id}", response_model=ChatResponse)
+async def chat(session_id: str, chat_request: ChatRequest):
     session = sessions.get(session_id)
     if session is None:
         Logger.error(f"Chat attempt on unknown session_id={session_id}")
         raise HTTPException(status_code=404, detail="session not found")
     try:
-        payload = await session.send_message(chat_in.prompt)
+        prompt = next((msg.content for msg in chat_request.messages[::-1] if msg.role == 'user'), None)
+
+        if not prompt:
+            raise HTTPException(status_code=422, detail='no user prompt found.')
+
+        payload = await session.send_message(prompt)
     except Exception as e:
         Logger.error(f"Error in session {session_id}: {e}")
         raise HTTPException(status_code=502, detail=str(e))
@@ -81,9 +85,10 @@ async def chat(session_id: str, chat_in: ChatIn):
             raise HTTPException(status_code=502, detail=payload['error'])
 
     return payload
+    
 
 @app.post("/guess/{session_id}")
-def guess(session_id: str, guess_in: GuessIn):
+def guess(session_id: str, guess_in: GuessRequest):
     """
     Returns either {
             "correct"       : False,

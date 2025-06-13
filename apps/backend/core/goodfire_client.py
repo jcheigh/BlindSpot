@@ -45,7 +45,7 @@ class GoodfireBot:
                         top_p                  = self.top_p,
                         max_completion_tokens  = self.max_tokens
                         )
-            return response
+            return response.choices[0].message['content']
             
         except goodfire.exceptions.InferenceAbortedException:
             return self.default_msg

@@ -17,13 +17,14 @@ export async function startGame(difficulty: Difficulty): Promise<GameSession> {
   return response.json();
 }
 
-export async function sendChat(sessionId: string, prompt: string): Promise<Message | ErrorResponse> {
+export async function sendChat(sessionId: string, prompt: string, signal?: AbortSignal): Promise<Message | ErrorResponse> {
   const response = await fetch(`${API_BASE_URL}/chat/${sessionId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ prompt }), 
+    signal, 
   });
 
   if (!response.ok) {
@@ -32,7 +33,6 @@ export async function sendChat(sessionId: string, prompt: string): Promise<Messa
 
   return response.json();
 }
-
 
 export async function sendGuess(sessionId: string, guess: string): Promise<{ correct: boolean; targetConcept: string } | ErrorResponse> {
   const response = await fetch(`${API_BASE_URL}/guess/${sessionId}`, {

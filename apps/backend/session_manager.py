@@ -58,7 +58,7 @@ class UserSession:
         """TODO: Make this not horrible"""
         return 0 if a.strip().lower() == b.strip().lower() else 1
 
-    async def send_message(self, prompt: str) -> Dict[str, Any]:
+    async def send_message(self, prompt: str) -> Dict[str, str]:
         if not self._in_chat_window():
             self.chat_closed = True
             Logger.warning(f"Chat window closed – rejecting message for session {self.session_id}")
@@ -73,12 +73,7 @@ class UserSession:
             return {"error" : f'chatbot error {exc}'}
 
         Logger.info(f"[Session {self.session_id}] ASSISTANT: {resp}")
-        return {
-            "id"       : self.session_id,
-            "content"  : resp,
-            "role"     : "assistant",
-            "timestamp": datetime.now().isoformat()
-        }
+        return {"message" : resp} 
 
     def send_guess(self, guess: str, threshold: int = 0) -> Dict[str, Any]:
         Logger.info(f"[Session {self.session_id}] GUESS: '{guess}'")
