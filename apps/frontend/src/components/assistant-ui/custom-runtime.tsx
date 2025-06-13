@@ -39,6 +39,12 @@ export function CustomRuntime({
             }
 
             const data: { message: string } = await response.json();
+            
+            // Emit custom event to notify message was sent
+            window.dispatchEvent(new CustomEvent('messageSent', { 
+                detail: { sessionId } 
+            }));
+            
             return {
                 content: [{ type: "text", text: data.message }],
             };

@@ -113,6 +113,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   const value: GameContextType = {
     session,
+    setSession,
     isLoading,
     error,
     startGame,

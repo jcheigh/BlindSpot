@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CustomRuntime } from "@/components/assistant-ui/custom-runtime";
 import { Thread } from '@/components/assistant-ui/thread';
 import { Button } from '@/components/ui/button';
@@ -8,10 +8,53 @@ import { useGame } from '@/lib/game-context';
 import { sendGuess } from '@/lib/api';
 
 export function GameContent() {
-  const { session } = useGame();
+  const { session, setSession } = useGame();
   const [guessInput, setGuessInput] = useState('');
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showGameOver, setShowGameOver] = useState(false);
   const [isGuessing, setIsGuessing] = useState(false);
+  const [messageCount, setMessageCount] = useState(0);
+  
+  const maxGuesses = 5;
+  const maxMessages = 20;
+  
+  // Update message count when it changes
+  useEffect(() => {
+    if (session) {
+      setMessageCount(session.messages.length);
+    }
+  }, [session]);
+  
+  useEffect(() => {
+    const handleMessageSent = (event: CustomEvent) => {
+      if (event.detail.sessionId === session?.id) {
+        setMessageCount(prev => prev + 2); 
+        setSession(prev => {
+          if (!prev) return null;
+          const newMessages = [...prev.messages];
+          // Add placeholder messages to track count
+          newMessages.push(
+            {
+              id: Date.now().toString() + '-user',
+              content: '',
+              role: 'user' as const,
+              timestamp: new Date().toISOString()
+            },
+            {
+              id: Date.now().toString() + '-assistant', 
+              content: '',
+              role: 'assistant' as const,
+              timestamp: new Date().toISOString()
+            }
+          );
+          return { ...prev, messages: newMessages };
+        });
+      }
+    };
+
+    window.addEventListener('messageSent', handleMessageSent as EventListener);
+    return () => window.removeEventListener('messageSent', handleMessageSent as EventListener);
+  }, [session?.id, setSession]);
 
   const handleGuess = async () => {
     if (!session || !guessInput.trim()) return;
@@ -19,8 +62,24 @@ export function GameContent() {
     setIsGuessing(true);
     try {
       const result = await sendGuess(session.id, guessInput.trim());
+      
+      // Update session guess count
+      setSession(prev => {
+        if (!prev) return null;
+        const newGuessCount = prev.guessCount + 1;
+        return {
+          ...prev,
+          guessCount: newGuessCount
+        };
+      });
+      
       if ('correct' in result && result.correct) {
         setShowCelebration(true);
+      } else {
+        // Check if max guesses reached
+        if (session.guessCount + 1 >= maxGuesses) {
+          setShowGameOver(true);
+        }
       }
     } catch (error) {
       console.error('Failed to submit guess:', error);
@@ -29,6 +88,13 @@ export function GameContent() {
       setGuessInput('');
     }
   };
+  
+  // Check for game over conditions
+  useEffect(() => {
+    if (session && ((session.guessCount ?? 0) >= maxGuesses || messageCount >= maxMessages) && !showCelebration && !showGameOver) {
+      setShowGameOver(true);
+    }
+  }, [session, messageCount, maxGuesses, maxMessages, showCelebration, showGameOver]);
 
   if (showCelebration) {
     return (
@@ -39,7 +105,31 @@ export function GameContent() {
             Congratulations!
           </h1>
           <p className="text-2xl text-slate-300 mb-8">
-            You've successfully uncovered the hidden concept!
+            You&apos;ve successfully uncovered the hidden concept!
+          </p>
+          <Button
+            onClick={() => window.location.href = '/'}
+            className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-12 py-4 text-xl font-bold rounded-xl"
+          >
+            Play Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
+  
+  if (showGameOver) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="text-8xl mb-8">💔</div>
+          <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-red-400 via-orange-500 to-red-600 bg-clip-text text-transparent">
+            Game Over!
+          </h1>
+          <p className="text-2xl text-slate-300 mb-8">
+            {(session?.guessCount ?? 0) >= maxGuesses ? 
+              `You&apos;ve used all ${maxGuesses} guesses!` : 
+              `You&apos;ve reached the maximum of ${maxMessages} messages!`}
           </p>
           <Button
             onClick={() => window.location.href = '/'}
@@ -89,8 +179,8 @@ export function GameContent() {
   
               <div className="mt-6 pt-6 border-t border-slate-600">
                 <div className="text-sm text-slate-400 space-y-2">
-                  <div>Messages: {session.messages.length}</div>
-                  <div>Guesses: {session.guessCount}</div>
+                  <div>Messages: {messageCount  / 2}/{maxMessages}</div>
+                  <div>Guesses: {session.guessCount}/{maxGuesses}</div>
                 </div>
               </div>
             </div>

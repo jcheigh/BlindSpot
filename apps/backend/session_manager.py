@@ -5,6 +5,7 @@ from typing import Any, Dict
 from core.goodfire_client import GoodfireBot
 from core.config import settings
 from core.utils import Logger
+from core.distance import Distance
 class UserSession:
     """Tracks a single game session for one user.
 
@@ -55,8 +56,7 @@ class UserSession:
 
     @staticmethod
     def _distance(a: str, b: str) -> int:
-        """TODO: Make this not horrible"""
-        return 0 if a.strip().lower() == b.strip().lower() else 1
+        return Distance.distance(a, b)
 
     async def send_message(self, prompt: str) -> Dict[str, str]:
         if not self._in_chat_window():
@@ -75,7 +75,7 @@ class UserSession:
         Logger.info(f"[Session {self.session_id}] ASSISTANT: {resp}")
         return {"message" : resp} 
 
-    def send_guess(self, guess: str, threshold: int = 0) -> Dict[str, Any]:
+    def send_guess(self, guess: str, threshold: int = 0.2) -> Dict[str, Any]:
         Logger.info(f"[Session {self.session_id}] GUESS: '{guess}'")
 
         if self.won:

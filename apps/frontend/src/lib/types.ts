@@ -1,3 +1,5 @@
+import React from 'react';
+
 export type Difficulty = 'Easy' | 'Medium' | 'Hard';
 
 export interface ErrorResponse {
@@ -21,6 +23,7 @@ export interface GameSession {
 
 export interface GameContextType {
   session: GameSession | null;
+  setSession: React.Dispatch<React.SetStateAction<GameSession | null>>;
   isLoading: boolean;
   error: Error | null;
   startGame: (difficulty: Difficulty) => Promise<void>;
