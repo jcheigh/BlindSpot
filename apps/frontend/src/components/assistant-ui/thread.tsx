@@ -104,7 +104,7 @@ const ThreadWelcomeSuggestions: FC = () => {
         autoSend
       >
         <span className="line-clamp-2 text-ellipsis text-sm font-semibold text-slate-200">
-          What is Dirichlet's theorem on primes in arithmetic progressions?
+          What is Dirichlet&apos;s theorem on primes in arithmetic progressions?
         </span>
       </ThreadPrimitive.Suggestion>
     </div>
@@ -132,7 +132,7 @@ const ComposerAction: FC = () => {
         <ComposerPrimitive.Send asChild>
           <TooltipIconButton
             tooltip="Send"
-            variant="default"
+            variant="primary"
             className="my-2.5 size-8 p-2 transition-opacity ease-in"
           >
             <SendHorizontalIcon />
@@ -143,7 +143,7 @@ const ComposerAction: FC = () => {
         <ComposerPrimitive.Cancel asChild>
           <TooltipIconButton
             tooltip="Cancel"
-            variant="default"
+            variant="primary"
             className="my-2.5 size-8 p-2 transition-opacity ease-in"
           >
             <CircleStopIcon />

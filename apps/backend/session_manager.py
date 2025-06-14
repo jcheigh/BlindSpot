@@ -75,7 +75,7 @@ class UserSession:
         Logger.info(f"[Session {self.session_id}] ASSISTANT: {resp}")
         return {"message" : resp} 
 
-    def send_guess(self, guess: str, threshold: int = 0.2) -> Dict[str, Any]:
+    def send_guess(self, guess: str, threshold: int = 0.15) -> Dict[str, Any]:
         Logger.info(f"[Session {self.session_id}] GUESS: '{guess}'")
 
         if self.won:

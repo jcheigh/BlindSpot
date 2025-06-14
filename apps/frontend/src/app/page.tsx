@@ -28,7 +28,7 @@ export default function Home() {
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 via-indigo-500 to-blue-600 rounded-lg blur opacity-10"></div>
           </div>
           <p className="text-xl text-blue-200 font-medium tracking-wide">
-            Find the AI's Blind Spot! 
+            Find the AI&apos;s Blind Spot! 
           </p>
         </div>
 

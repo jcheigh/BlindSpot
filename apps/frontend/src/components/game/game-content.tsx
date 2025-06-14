@@ -149,7 +149,7 @@ export function GameContent() {
             <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 via-indigo-500 to-blue-600 bg-clip-text text-transparent">
               BlindSpot
             </h1>
-            <p className="text-slate-300">Find the AI's Blind Spot!</p>
+            <p className="text-slate-300">Find the AI&apos;s Blind Spot!</p>
           </div>
   
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-200px)]">
@@ -162,7 +162,7 @@ export function GameContent() {
             <div className="bg-blue-900/40 backdrop-blur-sm rounded-xl border border-blue-700/40 shadow-xl p-8">
               <div className="mb-6">
                 <h3 className="text-2xl font-bold text-white mb-2">Make Your Guess</h3>
-                <p className="text-slate-300 text-sm">Think you know what the AI doesn't?</p>
+                <p className="text-slate-300 text-sm">Think you know what the AI doesn&apos;t?</p>
               </div>
               <div className="space-y-4">
                 <textarea

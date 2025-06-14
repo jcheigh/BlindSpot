@@ -75,7 +75,7 @@ export function GuessPanel({
               />
             </div>
             {result === 'incorrect' && (
-              <p className="text-red-500 text-sm">That's not correct. Try again!</p>
+              <p className="text-red-500 text-sm">That&apos;s not correct. Try again!</p>
             )}
             <div className="flex justify-between gap-4">
               <Button
