@@ -20,15 +20,15 @@ export function Instructions({ className }: InstructionsProps) {
   return (
     <div className={cn('w-full', className)}>
       <div 
-        className="bg-slate-800/60 backdrop-blur-sm border border-slate-600 rounded-xl p-6 cursor-pointer transition-all duration-300 hover:border-slate-500 hover:bg-slate-700/60"
+        className="bg-blue-900/40 backdrop-blur-sm border border-blue-700/40 rounded-xl p-6 cursor-pointer transition-all duration-300 hover:border-blue-600/60 hover:bg-blue-800/50"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-2xl">🎮</span>
-            <h3 className="text-xl font-bold text-slate-200">Game Rules</h3>
+            <h3 className="text-xl font-bold text-blue-200">Game Rules</h3>
           </div>
-          <button className="text-slate-400 hover:text-slate-200 transition-colors" aria-label="Toggle Instructions">
+          <button className="text-blue-300 hover:text-blue-100 transition-colors" aria-label="Toggle Instructions">
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
               width="24" 
@@ -47,26 +47,26 @@ export function Instructions({ className }: InstructionsProps) {
         </div>
         
         {!isOpen && (
-          <p className="text-slate-400 mt-2 text-sm">
-            Discover the mystery concept through clever questioning
+          <p className="text-blue-300/80 mt-2 text-sm">
+            Discover the concept the model has forgotten through clever questioning.
           </p>
         )}
       </div>
 
       {isOpen && (
-        <div className="mt-4 bg-slate-800/80 backdrop-blur-sm border border-slate-600 rounded-xl p-6 space-y-6">
+        <div className="mt-4 bg-blue-900/50 backdrop-blur-sm border border-blue-700/40 rounded-xl p-6 space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {gameSteps.map((step, index) => (
               <div key={index} className="text-center space-y-2">
                 <div className="text-3xl">{step.icon}</div>
-                <p className="text-sm text-slate-300 font-medium">{step.text}</p>
+                <p className="text-sm text-blue-200 font-medium">{step.text}</p>
               </div>
             ))}
           </div>
           
-          <div className="border-t border-slate-600 pt-4">
-            <h4 className="text-lg font-semibold text-slate-200 mb-3">Pro Tips</h4>
-            <div className="grid md:grid-cols-2 gap-3 text-sm text-slate-300">
+          <div className="border-t border-blue-700/50 pt-4">
+            <h4 className="text-lg font-semibold text-blue-200 mb-3">Pro Tips</h4>
+            <div className="grid md:grid-cols-2 gap-3 text-sm text-blue-200/90">
               <div className="flex items-start gap-2">
                 <span className="text-green-400 mt-1">▸</span>
                 <span>Start broad, then narrow down</span>

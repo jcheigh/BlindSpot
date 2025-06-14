@@ -18,16 +18,16 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
       <div className="relative z-10 w-full max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <div className="relative inline-block">
-            <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent tracking-wide">
+            <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-indigo-500 to-blue-600 bg-clip-text text-transparent tracking-wide">
               BlindSpot
             </h1>
-            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 rounded-lg blur opacity-10"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 via-indigo-500 to-blue-600 rounded-lg blur opacity-10"></div>
           </div>
-          <p className="text-xl text-slate-300 font-medium tracking-wide">
+          <p className="text-xl text-blue-200 font-medium tracking-wide">
             Find the AI's Blind Spot! 
           </p>
         </div>

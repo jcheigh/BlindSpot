@@ -45,7 +45,7 @@ export function DifficultySelector({ onSelect, className }: DifficultySelectorPr
 
   return (
     <div className={cn('space-y-6', className)}>
-      <h2 className="text-2xl font-bold text-center text-slate-200 tracking-wide">Choose Your Challenge</h2>
+      <h2 className="text-2xl font-bold text-center text-blue-200 tracking-wide">Choose Your Challenge</h2>
       <div className="grid gap-6 sm:grid-cols-3">
         {difficulties.map((difficulty) => (
           <div
@@ -58,10 +58,10 @@ export function DifficultySelector({ onSelect, className }: DifficultySelectorPr
           >
             <div
               className={cn(
-                'relative bg-slate-800/80 backdrop-blur-sm border-2 rounded-xl p-6 shadow-xl transition-all duration-300',
+                'relative bg-blue-900/40 backdrop-blur-sm border-2 rounded-xl p-6 shadow-xl transition-all duration-300',
                 selected === difficulty.value
-                  ? 'border-cyan-400 shadow-cyan-400/50 shadow-2xl bg-slate-700/90'
-                  : 'border-slate-600 hover:border-slate-500 hover:shadow-slate-500/30'
+                  ? 'border-blue-400 shadow-blue-400/50 shadow-2xl bg-blue-800/60'
+                  : 'border-blue-700/40 hover:border-blue-600/60 hover:shadow-blue-500/30'
               )}
             >
               <div className="text-center space-y-3">
@@ -74,7 +74,7 @@ export function DifficultySelector({ onSelect, className }: DifficultySelectorPr
               </div>
               
               {selected === difficulty.value && (
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
               )}
               
               <input

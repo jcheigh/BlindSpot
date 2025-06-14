@@ -18,8 +18,8 @@ export default function GamePage() {
   console.log(session?.messages)
   if (!session) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <p className="text-slate-300">No active game session. Redirecting to home...</p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <p className="text-blue-200">No active game session. Redirecting to home...</p>
       </div>
     );
   }
