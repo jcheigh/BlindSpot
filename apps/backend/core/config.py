@@ -17,8 +17,14 @@ class Settings(BaseSettings):
     CHAT_DURATION_SEC: int
     MAX_MESSAGES: int       
     MAX_GUESSES: int 
-    FRONTEND_URL: str 
-    
+    PROD_FRONTEND_URL: str 
+    DEV_FRONTEND_URL: str 
+    PROD: bool 
+
+    @property
+    def FRONTEND_URL(self) -> str:
+        return self.PROD_FRONTEND_URL if self.PROD else self.DEV_FRONTEND_URL
+
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,
         env_file_encoding="utf-8",
