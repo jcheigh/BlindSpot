@@ -6,8 +6,10 @@ ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
 
 class Settings(BaseSettings):
     GOODFIRE_API_KEY: str 
-    CALL_BUDGET: int
     GOODFIRE_MODEL: str 
+    OPENAI_API_KEY: str 
+    OPENAI_MODEL: str
+    CALL_BUDGET: int
     DEFAULT_MSG: str 
     TOP_K_FEATURES: int 
     ABORT_WHEN_THRESH: int 
