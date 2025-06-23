@@ -1,6 +1,6 @@
 # 🎮 BlindSpot
 
-BlindSpot is a Wordle x LLM x Mech Interp inspired game. Users are given a seemingly normal LLM, with a specific concept (color, birds, numbers etc.) "forgetten". Players are given up to N model calls and up to K "Wordle" style guesses to guess the concept. 
+BlindSpot is a 20 Questions x LLM x Mech Interp inspired game. Users are given a seemingly normal LLM, with a specific concept (color, birds, numbers etc.) "forgetten". Players are given up to N model calls and up to K "Wordle" style guesses to guess the concept. 
 
 ## Methodology 
 In the long run, we'd wish to do this purely through intervening on the model via the [Goodfire SDK](https://docs.goodfire.ai/quickstart#advanced-look-at-a-features-nearest-neighbors). For example, for each concept, we can find various sets of (feature, value) pairs in the model (e.g. Llama 3.3 8b/70b), such that if we variant.set(features, values), the resulting model seemingly forgets the concept. 
@@ -14,8 +14,7 @@ To do this, we have many options:
 - SFT methods (e.g. LoRA) (but too hard/too lazy...)
 - Custom models (e.g. BERT) (depending on the task)
 - Feature values from Goodfire (also some other info here)
-
-So, our classifier is essentially an ensemble of all of these. Take log probs, feature values, whatever you can get, as inputs to a custom classifier that will result in the final prediction. 
+- An ensemble, where you create a custom classifier using log probs, feature values, whatever you can get as inputs to a custom classifier that will result in the final prediction.
 
 # Repo Details
 
@@ -70,5 +69,14 @@ curl -X POST "http://127.0.0.1:8000/start?difficulty=Easy"
 ```
 and copy the session_id. Then open http://127.0.0.1:8000/docs in the browser and try out the relevant routes using your session id. 
 
-## Random Notes
-- I turned up chat duration for testing. 
+## To Do 
+
+**Get to Finished State:**
+[ ] Add better game instructions
+[ ] Fix bug where game ends in max_guesses / 2 
+[ ] Add guess messsages 
+[ ] Carefully curate list of concepts 
+
+**Potential Next Steps:**
+[ ] Better classifier 
+[ ] Hints 
